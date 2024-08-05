@@ -1,34 +1,45 @@
 <%- include('./partials/header') %>
-  <% user.cart.forEach(function(item){ %>
+<% if (user.cart.length === 0) { %>
+  <p>Your cart is empty</p>
+<% } else { %>
+  <% user.cart.forEach(function(item, index){ %>
     <div class="w-full h-screen flex items-start px-20 py-20 gap-10">
         <div class="w-[30%] rounded-md overflow-hidden">
             <div class="w-full flex justify-center items-center h-80 bg-[<%= item.bgcolor %>]">
-                <img class="h-[18rem]" src="data:image/jpeg;base64,<%= item.image.toString('base64') %>"
-                                alt="">
+                <% if (item.image) { %>
+                    <img class="h-[18rem]" src="data:image/jpeg;base64,<%= item.image.toString('base64') %>" alt="">
+                <% } else { %>
+                    <p>No image available</p>
+                <% } %>
             </div>
             <div class="w-full flex justify-between px-5 py-4 bg-[<%= item.panelcolor %>]">
-                <h3 class="text-2xl">Clinge Bag</h3>
+                <h3 class="text-2xl"><%= item.name %></h3>
                 <div class="flex items-center gap-2">
-                    <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line"></i>
-                    <div class="px-2 py-1 rounded-md bg-white text-black">01</div>
-                    <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-subtract-line"></i>
+                    <button class="w-7 h-7 bg-white flex rounded-full items-center justify-center" onclick="decreaseQuantity(<%= index %>, <%= item.price %>, <%= item.discount %>, '<%= item._id %>')">-</button>
+                    <div class="px-2 py-1 rounded-md bg-white text-black quantity" id="quantity-<%= index %>">01</div>
+                    <button class="w-7 h-7 bg-white flex rounded-full items-center justify-center" onclick="increaseQuantity(<%= index %>, <%= item.price %>, <%= item.discount %>, '<%= item._id %>')">+</button>
                 </div>
             </div>
             <div class="flex text-white items-center justify-between px-5 py-3 bg-[<%= item.textcolor %>]">
                 <h4 class="text-lg">Net Total</h4>
-                <h2 class="text-lg">₹ <%=bill %></h2>
+                <h2 class="text-lg net-total" id="net-total-<%= index %>">₹ <%= item.price - item.discount %></h2>
             </div>
+            <form id="remove-form-<%= index %>" action="/removefromcart/<%= item._id %>" method="post" class="hidden">
+                <!-- <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="mt-2 px-4 py-2 bg-red-500 text-white rounded">Remove from Cart</button> -->
+            </form>
+            
         </div>
         <div class="w-[70%]">
             <h3 class="text-xl">Price Breakdown</h3>
             <div class="px-10 mt-5">
                 <div class="flex mt-2">
                     <h4 class="w-1/3">Total MRP</h4>
-                    <h4>₹ <%= item.price %></h4>
+                    <h4 id="total-mrp-<%= index %>">₹ <%= item.price %></h4>
                 </div>
                 <div class="flex mt-2">
                     <h4 class="w-1/3">Discount on MRP</h4>
-                    <h4>₹ <%=Number( item.discount) %></h4>
+                    <h4>₹ <%= item.discount %></h4>
                 </div>
                 <div class="flex mt-2">
                     <h4 class="w-1/3">Platform Fee</h4>
@@ -39,15 +50,92 @@
                     <h4>FREE</h4>
                 </div>
             </div>
-            <div class="w-full h-[1px] bg-black mt-10"></div>
-            <div class="flex mt-5">
-                <h3 class="w-1/3 text-xl">Total Amount</h3>
-                <h3 class="font-semibold text-xl text-green-600">₹ <%= bill %></h3>
-            </div>
-            <form action=""></form>
         </div>
     </div>
-
   <% }) %>
-    
-    <%- include('./partials/footer') %>
+  <div class="px-20"> 
+  <div class="flex mt-5">
+      <h3 class="w-1/3 text-xl">Total Amount</h3>
+      <h3 class="font-semibold text-xl text-green-600" id="total-amount">₹</h3>
+  </div>
+  <form action="/checkout" method="post">
+      <button type="submit" class="mt-10 px-10 py-2 bg-blue-500 text-white rounded">Proceed to Checkout</button>
+  </form>
+</div>
+<% } %>
+<%- include('./partials/footer') %>
+<script>
+    function updateNetTotal(index, price, discount) {
+        const quantity = parseInt(document.getElementById(`quantity-${index}`).innerText);
+        const netTotal = (price - discount) * quantity;
+        document.getElementById(`net-total-${index}`).innerText = `₹ ${netTotal}`;
+        updateTotalAmount();
+    }
+
+    function increaseQuantity(index, price, discount, productId) {
+        const quantityDiv = document.getElementById(`quantity-${index}`);
+        let quantity = parseInt(quantityDiv.innerText);
+        if(quantity < 7){
+            quantity += 1;
+            quantityDiv.innerText = quantity.toString().padStart(2, '0');
+            updateNetTotal(index, price, discount);
+            updateTotalMRP(index, price, quantity);
+            updateRemoveButton(index, quantity, productId);
+        }
+    }
+
+    function decreaseQuantity(index, price, discount, productId) {
+    const quantityDiv = document.getElementById(`quantity-${index}`);
+    let quantity = parseInt(quantityDiv.innerText);
+    if (quantity > 1) {
+        quantity -= 1;
+        quantityDiv.innerText = quantity.toString().padStart(2, '0');
+        updateNetTotal(index, price, discount);
+        updateTotalMRP(index, price, quantity);
+        updateRemoveButton(index, quantity);
+    } else if (quantity === 1) {
+        quantity -= 1; // Set quantity to 0
+        quantityDiv.innerText = quantity.toString().padStart(2, '0');
+        updateNetTotal(index, price, discount);
+        updateTotalMRP(index, price, quantity);
+        // Automatically submit the form to remove the item from the cart
+        document.getElementById(`remove-form-${index}`).submit();
+    }
+}
+
+function updateRemoveButton(index, quantity) {
+    const removeForm = document.getElementById(`remove-form-${index}`);
+    if (quantity === 0) {
+        removeForm.classList.remove('hidden');
+    } else {
+        removeForm.classList.add('hidden');
+    }
+}
+
+    function updateTotalMRP(index, price, quantity) {
+        const totalMRP = price * quantity;
+        document.getElementById(`total-mrp-${index}`).innerText = `₹ ${totalMRP}`;
+    }
+
+    function updateTotalAmount() {
+        let totalAmount = 0;
+        document.querySelectorAll('.net-total').forEach(element => {
+            const netTotalText = element.innerText.replace('₹ ', '');
+            totalAmount += parseInt(netTotalText);
+        });
+        totalAmount += 20; // Add platform fee
+        document.getElementById('total-amount').innerText = `₹ ${totalAmount}`;
+    }
+
+    function updateRemoveButton(index, quantity, productId) {
+        const removeForm = document.getElementById(`remove-form-${index}`);
+        if (quantity === 1) {
+            removeForm.classList.remove('hidden');
+        } else {
+            removeForm.classList.add('hidden');
+        }
+    }
+
+    // Initial call to set the total amount on page load
+    updateTotalAmount();
+</script>
