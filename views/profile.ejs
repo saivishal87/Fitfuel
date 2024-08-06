@@ -1,0 +1,37 @@
+<%- include('./partials/header') %>
+<body class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold text-center mb-8">Profile</h1>
+
+    <div class="bg-white shadow-lg rounded-lg p-8 mb-8">
+        <h2 class="text-2xl font-bold mb-4">Full Name: <%= user.fullName %></h2>
+        <p class="text-lg text-gray-700">Email: <%= user.email %></p>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-4">Previous Orders</h2>
+    <ul class="space-y-4">
+        <% if (user.orders.length > 0) { %>
+            <% user.orders.forEach(function(order) { %>
+                <li class="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-bold text-gray-800">Order ID:</span> 
+                        <span class="text-gray-700"><%= order.orderId %></span>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-bold text-gray-800">Order Date:</span> 
+                        <span class="text-gray-700"><%= order.orderDate %></span>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-bold text-gray-800">Total Amount:</span> 
+                        <span class="text-gray-700">$<%= order.totalAmount %></span>
+                    </div>
+                    <div class="mt-4 text-right">
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Details</button>
+                    </div>
+                </li>
+            <% }); %>
+        <% } else { %>
+            <p class="text-gray-500">No previous orders found.</p>
+        <% } %>
+    </ul>
+</body>
+<%- include('./partials/footer') %>

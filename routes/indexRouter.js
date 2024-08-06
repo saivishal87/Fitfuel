@@ -52,22 +52,36 @@ router.get("/addtocart/:productid",isLoggedin,async function(req,res){
         req.flash("error", "An error occurred while adding the product to the cart");
         res.redirect("/shop");
       }
-      router.post('/removefromcart/:productid', isLoggedin, async (req, res) => {
-        try {
-          let user = await userModel.findOne({ email: req.user.email });
-          if (!user) {
-            req.flash("error", "User not found");
-            return res.redirect("/cart");
-          }
-          user.cart = user.cart.filter(item => item._id.toString() !== req.params.productid);
-          await user.save();
-          res.redirect("/cart");
-        } catch (err) {
-          console.error('Error removing item from cart:', err);
-          req.flash("error", "Something went wrong");
-          res.redirect("/cart");
-        }
-      });
-      
+});
+router.post('/removefromcart/:productid', isLoggedin, async (req, res) => {
+  try {
+    let user = await userModel.findOne({ email: req.user.email });
+    if (!user) {
+      req.flash("error", "User not found");
+      return res.redirect("/cart");
+    }
+    user.cart = user.cart.filter(item => item._id.toString() !== req.params.productid);
+    await user.save();
+    res.redirect("/cart");
+  } catch (err) {
+    console.error('Error removing item from cart:', err);
+    req.flash("error", "Something went wrong");
+    res.redirect("/cart");
+  }
+});
+
+router.get("/profile", isLoggedin, async (req, res) => {
+  try {
+      const user = await userModel.findOne({ email: req.user.email });
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.render('profile', { user });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+  }
 });
 module.exports = router;
