@@ -4,10 +4,10 @@ const isLoggedin=require("../middlewares/isLoggedin")
 const productModel=require("../models/product-model");
 const userModel = require('../models/user-model');
 
-// Define routes for owners
-router.get('/', (req, res) => {
-    let error=req.flash("error")
-    res.render('index', { error,loggedin:false}); // Ensure the view exists
+
+router.get("/",async(req,res)=>{
+  let error=req.flash("error")
+  res.render("landing");
 });
 
 router.get("/shop",isLoggedin,async function(req,res){
@@ -84,4 +84,5 @@ router.get("/profile", isLoggedin, async (req, res) => {
       res.status(500).json({ message: 'Server error' });
   }
 });
+
 module.exports = router;

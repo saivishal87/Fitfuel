@@ -3,7 +3,7 @@
   <p>Your cart is empty</p>
 <% } else { %>
   <% user.cart.forEach(function(item, index){ %>
-    <div class="w-full h-screen flex items-start px-20 py-20 gap-10">
+    <div class="w-full h-screen  flex items-start px-20 py-20 gap-10">
         <div class="w-[30%] rounded-md overflow-hidden">
             <div class="w-full flex justify-center items-center h-80 bg-[<%= item.bgcolor %>]">
                 <% if (item.image) { %>

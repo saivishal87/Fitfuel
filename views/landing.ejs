@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fruit Shop Landing Page</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+</head>
+    <link rel="stylesheet" href="/stylesheets/landing.css" />
+
+  </head>
+  <body>
+    <header id="header" class="bg-gray-100 p-4">
+        <div class="header-content-div flex items-center justify-between">
+          <a href="#home-sec">
+            <img
+              src="/images/brandlogo.png"
+              alt="Company Logo"
+              id="header-img"
+              class="w-36 h-20"
+            />
+          </a>
+          <nav id="nav-bar" class="flex">
+            <a href="#about" class="nav-link ml-4 text-black hover:text-blue-500">ABOUT</a>
+            <a href="#varieties" class="nav-link ml-4 text-black hover:text-blue-500">VARIETIES</a>
+            <a href="#our-service" class="nav-link ml-4 text-black hover:text-blue-500">OUR SERVICE</a>
+            <a href="#benefits" class="nav-link ml-4 text-black hover:text-blue-500">BENEFITS</a>
+          </nav>
+        </div>
+      </header>
+    <main>
+      <section id="home-sec" class="flexible home-sec">
+        <div class="eye-grabber-img">
+          <img src="/images/hero_product.png" alt="">
+        </div>
+        <div class="eye-grabber">
+          <h1>Delicious, Nutritious, Satisfying</h1>
+          <h2>
+            Unleash your inner athlete. Optimize performance with our premium protein supplements. Build lean muscle, recover faster, and dominate your goals. Elevate your fitness journey today.
+          </h2>
+          <button class="btn" onclick="window.location.href = '#contact';">
+            Buy Now
+          </button>
+        </div>
+      </section>
+      <section id="about" class="sec-padding">
+        <h3 class="section-heading">Importance of supplements</h3>
+        <div class="sec-content-div flexible">
+          <p>
+            Your body is a high-performance machine demanding optimal fuel.
+             While a balanced diet forms the foundation, supplements can be
+              the catalyst for reaching your fitness goals. Protein powders aid
+               muscle growth and recovery, while vitamins and minerals bolster overall health.
+                Specialized formulas target specific needs, from increased energy to joint support.
+                 Remember, supplements aren't a magic solution but a valuable tool when used correctly.
+                  They complement a healthy lifestyle, enhancing results and optimizing performance. 
+                  It's crucial to consult with a healthcare professional 
+                  or registered dietitian to determine the best supplement regimen for your individual needs.
+                   By fueling your body with the right nutrients, you're investing in a stronger,
+                    healthier you.
+          </p>
+        </div>
+      </section>
+      <section id="varieties" class="sec-padding">
+        <h3 class="section-heading">VARIETIES</h3>
+        <div class="sec-content-div flexible">
+          <div class="tile">
+            <img src="/images/whey_protein.jpeg" alt="photo of amber apples" />
+            <h4>Whey Protein</h4>
+            <p>
+                Whey protein is a high-quality protein derived from milk, popular for muscle building and recovery.
+            </p>
+          </div>
+          <div class="tile">
+            <img
+              src="/images/creatine.png"
+              alt="photo of american trel apples"
+            />
+            <h4>Creatine</h4>
+            <p>
+                Creatine boosts muscle energy for enhanced strength and performance.
+            </p>
+          </div>
+          <div class="tile">
+            <img src="/images/preworkout.jpeg" alt="photo of red delicious apple" />
+            <h4>Preworkout</h4>
+            <p>
+                Pre-workout supplements boost energy, focus, and endurance for intense workouts.
+            </p>
+          </div>
+          <div class="tile">
+            <img src="images/multivitamin.jpeg" alt="photo of Maharaej apples" />
+            <h4>Multivitamin</h4>
+            <p>
+                Multivitamins provide essential nutrients for overall health and well-being.
+            </p>
+          </div>
+          <div class="tile">
+            <img src="/images/fish oil.jpeg" alt="photo of Hazratbael apples" />
+            <h4>Fish Oil</h4>
+            <p>
+                Fish oil provides essential omega-3 fatty acids for heart and brain health
+            </p>
+          </div>
+          <div class="tile">
+            <img src="/images/fiber.jpeg" alt="photo of Golden Delicious apples" />
+            <h4>Fiber</h4>
+            <p>
+                Fiber aids digestion, regularity, gut health, and weight control.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="our-service" class="sec-padding">
+        <h3 class="section-heading">OUR SERVICE</h3>
+        <div class="sec-content-div">
+          <div class="bars">
+            <div class="icon-container">
+              <img src="https://i.ibb.co/w6H542X/Fresh.png" alt="" />
+            </div>
+            <div class="txt-container">
+              <h5>healthy</h5>
+              <p>Supplements bridge nutritional gaps, supporting overall health and well-being.</p>
+            </div>
+          </div>
+          <div class="bars">
+            <div class="icon-container">
+              <img src="https://i.ibb.co/FKNq4Qr/delivered.png" alt="" />
+            </div>
+            <div class="txt-container">
+              <h5>Fast</h5>
+              <p>
+                We deliver your orders as fast as possible, Swift delivery of essential supplements to fuel your wellness journey
+              </p>
+            </div>
+          </div>
+          <div class="bars">
+            <div class="icon-container">
+              <img src="https://i.ibb.co/HHQK1wV/happy.png" alt="" />
+            </div>
+            <div class="txt-container">
+              <h5>Satisfying</h5>
+              <p>
+                We guarantee 100% customer satisfaction. We do our best to make
+                your purchase experience smooth. But if we mess up somehow you
+                will get compensated for every inconvenience.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="benefits" class="sec-padding">
+        <h3 class="section-heading">BENEFITS</h3>
+        <div class="sec-content-div flexible">
+          <iframe
+            id="video"
+            width="560"
+            title="Benefits of Apple"
+            height="315"
+            src="https://youtu.be/B-wN6X80nYw?si=CMKijEKUptHeLfeC"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+      <section class="sec-padding" id="contact">
+        <h3 class="section-heading">CONTACT</h3>
+        <div class="sec-content-div flexible">
+          <h6>To make an order or just to know more contact us :</h6>
+          <form
+            id="form"
+            action="https://www.freecodecamp.com/email-submit"
+            method="POST"
+          >
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Your Email Address"
+              required
+            />
+            <input type="submit" class="btn" id="submit" value="Know More" />
+          </form>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
