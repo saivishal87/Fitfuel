@@ -10,12 +10,19 @@
 </head>
 
 <body class="font-['helvetica_now_display']">
-    <nav class="w-full flex justify-between px-5 py-3">
-        <h3 class="text-xl">Scatch</h3>
+    <nav class="w-full flex justify-between">
         <% var loggedin= typeof loggedin !=="undefined"?loggedin:true %>
        <% if(loggedin){%>
-        <div class="flex gap-5">
-            <a href="/">Home</a>
+        <a class="px-20 py-2" href="#home-sec">
+            <img
+              src="/images/brandlogo.png"
+              alt="Company Logo"
+              id="header-img"
+              class="w-36 h-20"
+            />
+          </a>
+        <div class="flex gap-5 py-7 px-20">
+            <a href="/"></a>
             <a href="/shop">Shop</a>
             <a href="/cart">Cart</a>
             <a href="/profile">My Account</a>
