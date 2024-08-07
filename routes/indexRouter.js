@@ -5,9 +5,19 @@ const productModel=require("../models/product-model");
 const userModel = require('../models/user-model');
 
 
-router.get("/",async(req,res)=>{
+router.get("/", async (req, res) => {
+  let error = req.flash("error");
+  var isLogged = req.user ? true : false;
+
+  res.render("landing", { isLogged, error });
+});
+router.get("/signup",async(req,res)=>{
   let error=req.flash("error")
-  res.render("landing");
+  res.render("signup");
+});
+router.get("/login",async(req,res)=>{
+  let error=req.flash("error")
+  res.render("login");
 });
 
 router.get("/shop",isLoggedin,async function(req,res){

@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/stylesheets/login.css">
+</head>
+<body>
+    
+            <div class="wrapper">
+                <div class="title">
+                   Login Form
+                </div>
+                <form autocomplete="off" action="/users/login" method="post">
+                   <div class="field">
+                      <input type="text" name="email" required>
+                      <label>Email Address</label>
+                   </div>
+                   <div class="field">
+                      <input type="password" name="password" required>
+                      <label>Password</label>
+                   </div>
+                   <div class="field">
+                      <input type="submit" value="Login">
+                   </div>
+                   <div class="signup-link">
+                      Not a member? <a href="/signup">Signup now</a>
+                   </div>
+                </form>
+             </div>
+            <%- include('./partials/footer') %>
+</body>
+</html>

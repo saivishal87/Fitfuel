@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/stylesheets/login.css">
+</head>
+<body>
+    <%- include('./partials/header') %>
+            <div class="wrapper">
+                <div class="title">
+                   Register form
+                </div>
+                <form autocomplete="off" action="/users/register" method="post">
+
+                   <div class="field">
+                      <input type="text" required name="fill name">
+                      <label>Full name</label>
+                   </div>
+                   <div class="field">
+                    <input type="email" name="email" required>
+                    <label>email</label>
+                   </div>
+                   <div class="field">
+                      <input type="password" required name="password">
+                      <label>Password</label>
+                   </div>
+                   <div class="field">
+                      <input type="submit" value="Login">
+                   </div>
+                   <div class="signup-link">
+                      already a member? <a href="/login">login now</a>
+                   </div>
+                </form>
+             </div>
+            <%- include('./partials/footer') %>
+</body>
+</html>

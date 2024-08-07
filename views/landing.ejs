@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Fruit Shop Landing Page</title>
+    <title>FitFuel</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
@@ -38,9 +38,11 @@
           <h2>
             Unleash your inner athlete. Optimize performance with our premium protein supplements. Build lean muscle, recover faster, and dominate your goals. Elevate your fitness journey today.
           </h2>
-          <button class="btn" onclick="window.location.href = '#contact';">
-            Buy Now
-          </button>
+          <% var loggedin = typeof loggedin !== "undefined" ? loggedin : false; %>
+              <button class="btn" onclick="window.location.href = '/login';">
+                  Buy Now
+              </button>
+          
         </div>
       </section>
       <section id="about" class="sec-padding">
