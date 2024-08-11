@@ -81,20 +81,35 @@ router.post('/removefromcart/:productid', isLoggedin, async (req, res) => {
   }
 });
 
-router.get("/profile", isLoggedin, async (req, res) => {
+router.get('/profile',isLoggedin ,async (req, res) => {
   try {
-      const user = await userModel.findOne({ email: req.user.email });
+      if (!req.user || !req.user._id) {
+          return res.status(400).send('User not authenticated');
+      }
 
+      const user = await userModel.findById(req.user._id)
+          .populate({
+              path: 'orders',
+              populate: {
+                  path: 'items._id',
+                  model: 'product'
+              }
+          });
+    
+
+    
       if (!user) {
-          return res.status(404).json({ message: 'User not found' });
+          return res.status(404).send('User not found');
       }
 
       res.render('profile', { user });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+      console.error('Error fetching user profile:', error);
+      res.status(500).send('Internal Server Error');
   }
 });
+
+
 router.post("/update-profile", isLoggedin, async function(req, res) {
   try {
       let { fullname, email, contact, Address } = req.body;
@@ -123,7 +138,7 @@ router.post("/update-profile", isLoggedin, async function(req, res) {
       res.redirect('/profile');
   }
 });
-router.post('/checkout',isLoggedin,async (req, res) => {
+router.post('/checkout', isLoggedin, async (req, res) => {
   try {
       const userId = req.user._id; // Assuming you're using authentication and have the user's ID stored in req.user
       const items = [];
@@ -155,7 +170,15 @@ router.post('/checkout',isLoggedin,async (req, res) => {
 
       // Save the order to the database
       await order.save();
+
+      // Update the user's orders array
+      await userModel.findByIdAndUpdate(userId, {
+          $push: { orders: order._id },
+          $set: { cart: [] }
+      });
+
       req.session.orderId = order._id;
+
       // Redirect to a confirmation page or the order summary
       res.redirect('/order-summary'); // Update this to the correct route
   } catch (error) {
@@ -163,6 +186,7 @@ router.post('/checkout',isLoggedin,async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 router.get('/order-summary', async (req, res) => {
@@ -186,6 +210,28 @@ router.get('/order-summary', async (req, res) => {
       res.render('order-summary', { order });
   } catch (error) {
       console.error('Error fetching order summary:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+// In your routes/indexRouter.js or equivalent file
+
+router.get('/orders/:id', async (req, res) => {
+  try {
+      const orderId = req.params.id;
+      console.log('Fetching order with ID:', orderId); // Log the ID
+      const order = await Order.findById(orderId).populate({
+          path: 'items._id',
+          model: 'product'
+      });
+ // Log the order details
+
+      if (!order) {
+          return res.status(404).send('Order not found');
+      }
+
+      res.render('order-details', { order });
+  } catch (error) {
+      console.error('Error fetching order details:', error);
       res.status(500).send('Internal Server Error');
   }
 });
