@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="/stylesheets/login.css">
 </head>
 <body>
-    <%- include('./partials/header') %>
+    
             <div class="wrapper">
                 <div class="title">
                    Register form
@@ -14,7 +14,7 @@
                 <form autocomplete="off" action="/users/register" method="post">
 
                    <div class="field">
-                      <input type="text" required name="fill name">
+                      <input type="text" required name="fullname">
                       <label>Full name</label>
                    </div>
                    <div class="field">
@@ -26,7 +26,15 @@
                       <label>Password</label>
                    </div>
                    <div class="field">
-                      <input type="submit" value="Login">
+                     <input type="number" required name="contact">
+                     <label>Phone Number</label>
+                  </div>
+                  <div class="field">
+                     <input type="text" required name="Address">
+                     <label>Address</label>
+                  </div>
+                   <div class="field">
+                      <input type="submit" value="Sing up">
                    </div>
                    <div class="signup-link">
                       already a member? <a href="/login">login now</a>

@@ -14,7 +14,7 @@ const userSchema=mongoose.Schema({
         default:[],
     },
     contact:Number,
-    picture:String,
+    Address:String,
 
 })
 

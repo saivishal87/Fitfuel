@@ -94,5 +94,35 @@ router.get("/profile", isLoggedin, async (req, res) => {
       res.status(500).json({ message: 'Server error' });
   }
 });
+router.post("/update-profile", isLoggedin, async function(req, res) {
+  try {
+      let { fullname, email, contact, Address } = req.body;
+      let user = await userModel.findOneAndUpdate(
+          { email: req.user.email }, 
+          { 
+              fullname: fullname,
+              email: email,
+              contact: contact,
+              Address: Address
+          }, 
+          { new: true, runValidators: true }  // Return the updated document
+      );
+
+      
+      if (user) {
+          res.redirect('/profile');
+      } else {
+          req.flash('error', 'User not found');
+          res.redirect('/profile');
+      }
+  } catch (error) {
+      // Handle any errors that occur during the process
+      console.error(error);
+      req.flash('error', 'An error occurred while updating your profile');
+      res.redirect('/profile');
+  }
+});
+
 
 module.exports = router;
+
