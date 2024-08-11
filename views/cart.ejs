@@ -2,140 +2,180 @@
 <% if (user.cart.length === 0) { %>
   <p>Your cart is empty</p>
 <% } else { %>
-  <% user.cart.forEach(function(item, index){ %>
-    <div class="w-full h-screen  flex items-start px-20 py-20 gap-10">
-        <div class="w-[30%] rounded-md overflow-hidden">
-            <div class="w-full flex justify-center items-center h-80 bg-[<%= item.bgcolor %>]">
-                <% if (item.image) { %>
-                    <img class="h-[18rem]" src="data:image/jpeg;base64,<%= item.image.toString('base64') %>" alt="">
-                <% } else { %>
-                    <p>No image available</p>
-                <% } %>
-            </div>
-            <div class="w-full flex justify-between px-5 py-4 bg-[<%= item.panelcolor %>]">
-                <h3 class="text-2xl"><%= item.name %></h3>
-                <div class="flex items-center gap-2">
-                    <button class="w-7 h-7 bg-white flex rounded-full items-center justify-center" onclick="decreaseQuantity(<%= index %>, <%= item.price %>, <%= item.discount %>, '<%= item._id %>')">-</button>
-                    <div class="px-2 py-1 rounded-md bg-white text-black quantity" id="quantity-<%= index %>">01</div>
-                    <button class="w-7 h-7 bg-white flex rounded-full items-center justify-center" onclick="increaseQuantity(<%= index %>, <%= item.price %>, <%= item.discount %>, '<%= item._id %>')">+</button>
-                </div>
-            </div>
-            <div class="flex text-white items-center justify-between px-5 py-3 bg-[<%= item.textcolor %>]">
-                <h4 class="text-lg">Net Total</h4>
-                <h2 class="text-lg net-total" id="net-total-<%= index %>">₹ <%= item.price - item.discount %></h2>
-            </div>
-            <form id="remove-form-<%= index %>" action="/removefromcart/<%= item._id %>" method="post" class="hidden">
-                <!-- <input type="hidden" name="_method" value="DELETE">
-                <button type="submit" class="mt-2 px-4 py-2 bg-red-500 text-white rounded">Remove from Cart</button> -->
-            </form>
-            
+  <div class="flex flex-wrap px-20 py-20 gap-10">
+    <% user.cart.forEach(function(item, index){ %>
+      <div class="w-[30%] rounded-md overflow-hidden">
+        <div class="w-full flex justify-center items-center h-80 bg-[<%= item.bgcolor %>]">
+            <% if (item.image) { %>
+                <img class="h-[18rem]" src="data:image/jpeg;base64,<%= item.image.toString('base64') %>" alt="">
+            <% } else { %>
+                <p>No image available</p>
+            <% } %>
         </div>
-        <div class="w-[70%]">
-            <h3 class="text-xl">Price Breakdown</h3>
-            <div class="px-10 mt-5">
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Total MRP</h4>
-                    <h4 id="total-mrp-<%= index %>">₹ <%= item.price %></h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Discount on MRP</h4>
-                    <h4>₹ <%= item.discount %></h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Platform Fee</h4>
-                    <h4>₹ 20</h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Shipping Fee</h4>
-                    <h4>FREE</h4>
-                </div>
+        <div class="w-full flex justify-between px-5 py-4 bg-[<%= item.panelcolor %>]">
+            <h3 class="text-2xl"><%= item.name %></h3>
+            <div class="flex items-center gap-2">
+                <button class="w-7 h-7 bg-white flex rounded-full items-center justify-center" onclick="decreaseQuantity(<%= index %>, <%= item.price %>, <%= item.discount %>, '<%= item._id %>')">-</button>
+                <div class="px-2 py-1 rounded-md bg-white text-black quantity" id="quantity-<%= index %>">01</div>
+                <button class="w-7 h-7 bg-white flex rounded-full items-center justify-center" onclick="increaseQuantity(<%= index %>, <%= item.price %>, <%= item.discount %>, '<%= item._id %>')">+</button>
             </div>
         </div>
+        <div class="flex text-white items-center justify-between px-5 py-3 bg-[<%= item.textcolor %>]">
+            <h4 class="text-lg">Net Total</h4>
+            <h2 class="text-lg net-total" id="net-total-<%= index %>">₹ <%= item.price - item.discount %></h2>
+        </div>
+        <form id="remove-form-<%= index %>" action="/removefromcart/<%= item._id %>" method="post" class="hidden">
+        </form>
     </div>
-  <% }) %>
+    <% }) %>
+  </div>
+
   <div class="px-20"> 
-  <div class="flex mt-5">
+    <div class="flex mt-5">
       <h3 class="w-1/3 text-xl">Total Amount</h3>
       <h3 class="font-semibold text-xl text-green-600" id="total-amount">₹</h3>
+    </div>
   </div>
-  <form action="/checkout" method="post">
-      <button type="submit" class="mt-10 px-10 py-2 bg-blue-500 text-white rounded">Proceed to Checkout</button>
-  </form>
-</div>
+
+  <!-- Checkout Form -->
+  <div class="px-20 py-10">
+    <h2 class="text-2xl mb-5">Checkout</h2>
+    <div class="flex flex-col md:flex-row gap-10">
+      <div class="w-full md:w-3/4">
+        <div class="bg-white p-5 rounded shadow">
+          <form action="/checkout" method="post">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h3 class="text-xl mb-2">Billing Address</h3>
+                <label for="fname" class="block">Full Name</label>
+                <input type="text" id="fname" name="fullname" placeholder="John M. Doe" required class="w-full border px-2 py-1">
+                
+                <label for="email" class="block mt-2">Email</label>
+                <input type="email" id="email" name="email" placeholder="john@example.com" required class="w-full border px-2 py-1">
+                
+                <label for="adr" class="block mt-2">Address</label>
+                <input type="text" id="adr" name="address" placeholder="542 W. 15th Street" required class="w-full border px-2 py-1">
+                
+                <label for="city" class="block mt-2">City</label>
+                <input type="text" id="city" name="city" placeholder="New York" required class="w-full border px-2 py-1">
+
+                <div class="flex gap-2 mt-2">
+                  <div class="w-1/2">
+                    <label for="state" class="block">State</label>
+                    <input type="text" id="state" name="state" placeholder="NY" required class="w-full border px-2 py-1">
+                  </div>
+                  <div class="w-1/2">
+                    <label for="zip" class="block">Zip</label>
+                    <input type="text" id="zip" name="zip" placeholder="10001" required class="w-full border px-2 py-1">
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-xl mb-2">Payment</h3>
+                <label for="cname" class="block">Name on Card</label>
+                <input type="text" id="cname" name="cardname" placeholder="John More Doe" required class="w-full border px-2 py-1">
+                
+                <label for="ccnum" class="block mt-2">Credit card number</label>
+                <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444" required class="w-full border px-2 py-1">
+                
+                <label for="expmonth" class="block mt-2">Exp Month</label>
+                <input type="text" id="expmonth" name="expmonth" placeholder="September" required class="w-full border px-2 py-1">
+
+                <div class="flex gap-2 mt-2">
+                  <div class="w-1/2">
+                    <label for="expyear" class="block">Exp Year</label>
+                    <input type="text" id="expyear" name="expyear" placeholder="2024" required class="w-full border px-2 py-1">
+                  </div>
+                  <div class="w-1/2">
+                    <label for="cvv" class="block">CVV</label>
+                    <input type="text" id="cvv" name="cvv" placeholder="352" required class="w-full border px-2 py-1">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hidden fields for cart data -->
+            <% user.cart.forEach(function(item, index) { %>
+              <input type="hidden" name="product_id_<%= index %>" value="<%= item._id %>">
+              <input type="hidden" name="quantity_<%= index %>" value="1" id="quantity-hidden-<%= index %>">
+              <input type="hidden" name="price_<%= index %>" value="<%= item.price %>">
+              <input type="hidden" name="total_<%= index %>" value="<%= (item.price - item.discount).toFixed(2) %>" id="total-hidden-<%= index %>">
+            <% }) %>
+
+            <button type="submit" class="mt-5 px-10 py-2 bg-blue-500 text-white rounded">Confirm order</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="w-full md:w-1/4">
+        <div class="bg-white p-5 rounded shadow">
+          <h4 class="text-xl mb-2">Cart Summary</h4>
+          <% user.cart.forEach(function(item, index) { %>
+            <p class="flex justify-between"><span><%= item.name %></span> <span class="price">₹ <span id="summary-net-total-<%= index %>"><%= item.price - item.discount %></span></span></p>
+          <% }) %>
+          <hr class="my-2">
+          <p class="flex justify-between font-semibold">Total <span class="price">₹ <span id="summary-total-amount"></span></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
 <% } %>
 <%- include('./partials/footer') %>
+
 <script>
-    function updateNetTotal(index, price, discount) {
-        const quantity = parseInt(document.getElementById(`quantity-${index}`).innerText);
-        const netTotal = (price - discount) * quantity;
-        document.getElementById(`net-total-${index}`).innerText = `₹ ${netTotal}`;
-        updateTotalAmount();
-    }
+  function updateNetTotal(index, price, discount) {
+    const quantity = parseInt(document.getElementById(`quantity-${index}`).innerText);
+    const netTotal = (price - discount) * quantity;
+    document.getElementById(`net-total-${index}`).innerText = `₹ ${netTotal}`;
+    document.getElementById(`summary-net-total-${index}`).innerText = netTotal;
+    document.getElementById(`quantity-hidden-${index}`).value = quantity;
+    document.getElementById(`total-hidden-${index}`).value = netTotal;
+    updateTotalAmount();
+  }
 
-    function increaseQuantity(index, price, discount, productId) {
-        const quantityDiv = document.getElementById(`quantity-${index}`);
-        let quantity = parseInt(quantityDiv.innerText);
-        if(quantity < 7){
-            quantity += 1;
-            quantityDiv.innerText = quantity.toString().padStart(2, '0');
-            updateNetTotal(index, price, discount);
-            updateTotalMRP(index, price, quantity);
-            updateRemoveButton(index, quantity, productId);
-        }
+  function increaseQuantity(index, price, discount, productId) {
+    const quantityDiv = document.getElementById(`quantity-${index}`);
+    let quantity = parseInt(quantityDiv.innerText);
+    if(quantity < 7){
+      quantity += 1;
+      quantityDiv.innerText = quantity.toString().padStart(2, '0');
+      updateNetTotal(index, price, discount);
+      updateTotalMRP(index, price, quantity);
+      updateRemoveButton(index, quantity, productId);
     }
+  }
 
-    function decreaseQuantity(index, price, discount, productId) {
+  function decreaseQuantity(index, price, discount, productId) {
     const quantityDiv = document.getElementById(`quantity-${index}`);
     let quantity = parseInt(quantityDiv.innerText);
     if (quantity > 1) {
-        quantity -= 1;
-        quantityDiv.innerText = quantity.toString().padStart(2, '0');
-        updateNetTotal(index, price, discount);
-        updateTotalMRP(index, price, quantity);
-        updateRemoveButton(index, quantity);
+      quantity -= 1;
+      quantityDiv.innerText = quantity.toString().padStart(2, '0');
+      updateNetTotal(index, price, discount);
+      updateTotalMRP(index, price, quantity);
+      updateRemoveButton(index, quantity);
     } else if (quantity === 1) {
-        quantity -= 1; // Set quantity to 0
-        quantityDiv.innerText = quantity.toString().padStart(2, '0');
-        updateNetTotal(index, price, discount);
-        updateTotalMRP(index, price, quantity);
-        // Automatically submit the form to remove the item from the cart
-        document.getElementById(`remove-form-${index}`).submit();
+      document.getElementById(`remove-form-${index}`).submit();
     }
-}
+  }
 
-function updateRemoveButton(index, quantity) {
-    const removeForm = document.getElementById(`remove-form-${index}`);
-    if (quantity === 0) {
-        removeForm.classList.remove('hidden');
-    } else {
-        removeForm.classList.add('hidden');
-    }
-}
+  function updateTotalMRP(index, price, quantity) {
+    const totalMRP = price * quantity;
+    document.getElementById(`total-mrp-${index}`).innerText = `₹ ${totalMRP}`;
+  }
 
-    function updateTotalMRP(index, price, quantity) {
-        const totalMRP = price * quantity;
-        document.getElementById(`total-mrp-${index}`).innerText = `₹ ${totalMRP}`;
-    }
+  function updateTotalAmount() {
+    let totalAmount = 0;
+    document.querySelectorAll('.net-total').forEach(element => {
+      const netTotalText = element.innerText.replace('₹ ', '');
+      totalAmount += parseInt(netTotalText);
+    });
+    totalAmount += 20; // Add platform fee
+    document.getElementById('total-amount').innerText = `₹ ${totalAmount}`;
+    document.getElementById('summary-total-amount').innerText = totalAmount;
+  }
 
-    function updateTotalAmount() {
-        let totalAmount = 0;
-        document.querySelectorAll('.net-total').forEach(element => {
-            const netTotalText = element.innerText.replace('₹ ', '');
-            totalAmount += parseInt(netTotalText);
-        });
-        totalAmount += 20; // Add platform fee
-        document.getElementById('total-amount').innerText = `₹ ${totalAmount}`;
-    }
-
-    function updateRemoveButton(index, quantity, productId) {
-        const removeForm = document.getElementById(`remove-form-${index}`);
-        if (quantity === 1) {
-            removeForm.classList.remove('hidden');
-        } else {
-            removeForm.classList.add('hidden');
-        }
-    }
-
-    // Initial call to set the total amount on page load
-    updateTotalAmount();
+  // Initial call to set the total amount on page load
+  updateTotalAmount();
 </script>

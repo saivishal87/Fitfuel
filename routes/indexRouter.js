@@ -3,6 +3,7 @@ const router = express.Router();
 const isLoggedin=require("../middlewares/isLoggedin")
 const productModel=require("../models/product-model");
 const userModel = require('../models/user-model');
+const Order = require('../models/order-model'); 
 
 
 router.get("/", async (req, res) => {
@@ -122,7 +123,76 @@ router.post("/update-profile", isLoggedin, async function(req, res) {
       res.redirect('/profile');
   }
 });
+router.post('/checkout',isLoggedin,async (req, res) => {
+  try {
+      const userId = req.user._id; // Assuming you're using authentication and have the user's ID stored in req.user
+      const items = [];
+
+      // Iterate through the cart items to extract details
+      for (let i = 0; i < req.user.cart.length; i++) {
+          const itemId = req.body[`product_id_${i}`];
+          const quantity = parseInt(req.body[`quantity_${i}`]);
+          const price = parseFloat(req.body[`price_${i}`]);
+          const total = parseFloat(req.body[`total_${i}`]);
+
+          items.push({
+              _id: itemId,
+              price: price,
+              quantity: quantity,
+              total: total,
+          });
+      }
+
+      const totalAmount = items.reduce((sum, item) => sum + item.total, 0);
+
+      // Create a new order document
+      const order = new Order({
+          user: userId,
+          items: items,
+          totalAmount: totalAmount,
+          status: 'Pending', // Default status
+      });
+
+      // Save the order to the database
+      await order.save();
+      req.session.orderId = order._id;
+      // Redirect to a confirmation page or the order summary
+      res.redirect('/order-summary'); // Update this to the correct route
+  } catch (error) {
+      console.error('Error processing order:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
+router.get('/order-summary', async (req, res) => {
+  try {
+      const orderId = req.session.orderId;
+      if (!orderId) {
+          return res.status(400).send('Order ID not found');
+      }
+
+      // Fetch the order details and populate the item details
+      const order = await Order.findById(orderId)
+        .populate({
+          path: 'items._id',
+          select: 'name', // Adjust fields as needed
+        });
+
+      if (!order) {
+          return res.status(404).send('Order not found');
+      }
+
+      res.render('order-summary', { order });
+  } catch (error) {
+      console.error('Error fetching order summary:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
 
 
 module.exports = router;
+
+
 
