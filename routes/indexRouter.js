@@ -150,6 +150,9 @@ router.post('/checkout', isLoggedin, async (req, res) => {
           const price = parseFloat(req.body[`price_${i}`]);
           const total = parseFloat(req.body[`total_${i}`]);
 
+          // Assuming you have a way to get the image URL, e.g., from req.body or from a product model
+          const image = req.body[`image_${i}`]; // Fetch the image URL
+
           items.push({
               _id: itemId,
               price: price,
@@ -171,7 +174,7 @@ router.post('/checkout', isLoggedin, async (req, res) => {
       // Save the order to the database
       await order.save();
 
-      // Update the user's orders array
+      // Update the user's orders array and empty the cart
       await userModel.findByIdAndUpdate(userId, {
           $push: { orders: order._id },
           $set: { cart: [] }
@@ -218,7 +221,6 @@ router.get('/order-summary', async (req, res) => {
 router.get('/orders/:id', async (req, res) => {
   try {
       const orderId = req.params.id;
-      console.log('Fetching order with ID:', orderId); // Log the ID
       const order = await Order.findById(orderId).populate({
           path: 'items._id',
           model: 'product'

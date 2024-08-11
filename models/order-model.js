@@ -1,8 +1,9 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose');
+
 const orderSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'User',
         required: true
     },
     items: [{
@@ -26,7 +27,7 @@ const orderSchema = new mongoose.Schema({
         total: {
             type: Number,
             required: true
-        }
+        },
     }],
     totalAmount: {
         type: Number,
