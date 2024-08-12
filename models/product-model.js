@@ -8,9 +8,8 @@ const productSchema=mongoose.Schema({
         type:Number,
         default:0,
     },
-   bgcolor:String,
-   panelcolor:String,
-   textcolor:String,
+    product_type:String,
+    weight:String,
 
 })
 

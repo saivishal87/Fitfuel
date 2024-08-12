@@ -38,15 +38,24 @@
                             <input name="price" type="text" placeholder="Product Price" class="border p-2 rounded w-full">
                             <input name="discount" type="text" placeholder="Discount Price" class="border p-2 rounded w-full">
                         </div>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold mb-2">Panel Details</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <input name="bgcolor" type="text" placeholder="Background Color" class="border p-2 rounded w-full">
-                            <input name="panelcolor" type="text" placeholder="Panel Color" class="border p-2 rounded w-full">
-                            <input name="textcolor" type="text" placeholder="Text Color" class="border p-2 rounded w-full">
+                        <div class="flex gap-4">
+                            <div class="mt-4 flex flex-col w-1/2">
+                                <label class="block mb-2 font-medium">Product Type</label>
+                                <select name="product_type" class="border p-2 rounded w-full">
+                                    <option value="whey_protein">Whey Protein</option>
+                                    <option value="creatine">Creatine</option>
+                                    <option value="preworkout">Preworkout</option>
+                                    <option value="multivitamin">Multivitamin</option>
+                                    <option value="fishoil">Fishoil</option>
+                                    <option value="fiber">Fiber</option>
+                                </select>
+                            </div>
+                            <div class="w-1/2 mt-4">
+                                <label class="block mb-2 font-medium">Product Weight</label>
+                                <input name="weight" type="text" placeholder="Weight in (kgs)" class="border p-2 rounded w-full ">
+                            </div>
                         </div>
+                        
                     </div>
                     <input class="px-5 py-2 rounded mt-3 bg-blue-500 text-white" type="submit" value="Create New Product">
                 </form>
