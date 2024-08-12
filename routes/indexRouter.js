@@ -140,25 +140,47 @@ router.post("/update-profile", isLoggedin, async function(req, res) {
 });
 router.post('/checkout', isLoggedin, async (req, res) => {
   try {
-      const userId = req.user._id; // Assuming you're using authentication and have the user's ID stored in req.user
+      const userId = req.user._id;
       const items = [];
 
+      // Log the entire request body for debugging
+      
+
+      // Get the cart length
+
+
       // Iterate through the cart items to extract details
-      for (let i = 0; i < req.user.cart.length; i++) {
+      for (let i = 0; i < req.user.cart.length; i++) { // Iterate through all items
           const itemId = req.body[`product_id_${i}`];
           const quantity = parseInt(req.body[`quantity_${i}`]);
           const price = parseFloat(req.body[`price_${i}`]);
           const total = parseFloat(req.body[`total_${i}`]);
 
-          // Assuming you have a way to get the image URL, e.g., from req.body or from a product model
-          const image = req.body[`image_${i}`]; // Fetch the image URL
+          // Log extracted data for each item
+          console.log(`Item ${i}:`);
+          console.log(`  ID: ${itemId}`);
+          console.log(`  Quantity: ${quantity}`);
+          console.log(`  Price: ${price}`);
+          console.log(`  Total: ${total}`);
 
-          items.push({
-              _id: itemId,
-              price: price,
-              quantity: quantity,
-              total: total,
-          });
+          // Check if item data is valid before pushing to the array
+          if (itemId && !isNaN(quantity) && !isNaN(price) && !isNaN(total)) {
+              items.push({
+                  _id: itemId,
+                  price: price,
+                  quantity: quantity,
+                  total: total,
+              });
+          } else {
+              console.error(`Invalid data for item ${i}`);
+          }
+      }
+
+      console.log('Final items array:', items);
+
+      // Ensure that items array is not empty
+      if (items.length === 0) {
+          throw new Error('No valid items found in the cart');
       }
 
       const totalAmount = items.reduce((sum, item) => sum + item.total, 0);
@@ -168,7 +190,7 @@ router.post('/checkout', isLoggedin, async (req, res) => {
           user: userId,
           items: items,
           totalAmount: totalAmount,
-          status: 'Pending', // Default status
+          status: 'Pending',
       });
 
       // Save the order to the database
@@ -183,9 +205,9 @@ router.post('/checkout', isLoggedin, async (req, res) => {
       req.session.orderId = order._id;
 
       // Redirect to a confirmation page or the order summary
-      res.redirect('/order-summary'); // Update this to the correct route
+      res.redirect('/order-summary');
   } catch (error) {
-      console.error('Error processing order:', error);
+      console.error('Error processing order:', error.message);
       res.status(500).send('Internal Server Error');
   }
 });
